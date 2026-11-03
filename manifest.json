@@ -1,0 +1,28 @@
+{
+  "id": "./",
+  "name": "The Holy Quran – Al-Minshawi | القرآن الكريم – المنشاوي",
+  "short_name": "Quran | القرآن",
+  "description": "Quran player with the recitation of Sheikh Muhammad Siddiq Al-Minshawi. مشغل القرآن الكريم بصوت الشيخ محمد صديق المنشاوي.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f2a24",
+  "theme_color": "#0f2a24",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
