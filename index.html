@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>القرآن الكريم - الشيخ محمد صديق المنشاوي</title>
+
+<!-- Web App Manifest for PWA Support -->
+<link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIuinqtmN2KfZgSDYp9mE2YPYstmK2YUgLSDYp9mE2YXYtNmK2KfYiSIsCiAgInNob3J0X25hbWUiOiAi2KfZhNmC2LHYo9mGIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwZjJhMjQiLAogICJ0aGVtZV9jb2xvciI6ICIjMGYyYTI0Igp9">
+<meta name="theme-color" content="#0f2a24">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg-dark: #0f2a24;
+    --card-bg: rgba(24, 59, 50, 0.85);
+    --gold: #d4af37;
+    --gold-hover: #f3cf55;
+    --text-light: #f5f7f6;
+    --text-muted: #a3b8b0;
+    --border-color: rgba(212, 175, 55, 0.3);
+    --active-verse: rgba(212, 175, 55, 0.2);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at 50% 0%, #1a433a 0%, var(--bg-dark) 75%);
+    color: var(--text-light);
+    font-family: 'Tajawal', Arial, sans-serif;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  header {
+    background: rgba(15, 42, 36, 0.95);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px;
+    text-align: center;
+  }
+
+  h1 {
+    font-family: 'Amiri', serif;
+    color: var(--gold);
+    font-size: 1.8rem;
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 15px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .search-box {
+    position: relative;
+    margin-bottom: 12px;
+  }
+
+  .search-box input {
+    width: 100%;
+    padding: 10px 38px 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: rgba(15, 42, 36, 0.6);
+    color: var(--text-light);
+    font-size: 0.95rem;
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: #183b32;
+    color: var(--gold);
+    font-size: 1.05rem;
+    font-family: 'Tajawal', sans-serif;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .main-display {
+    text-align: center;
+    padding: 25px 15px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(15, 42, 36, 0.7);
+    border-radius: 10px;
+    border: 1px dashed var(--border-color);
+  }
+
+  #arabicText {
+    font-family: 'Amiri', serif;
+    font-size: 1.8rem;
+    line-height: 2.3;
+    color: #ffffff;
+    word-spacing: 2px;
+  }
+
+  #verseNumber {
+    color: var(--gold);
+    margin-top: 15px;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  #statusText {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin: 10px 0;
+    min-height: 20px;
+  }
+
+  /* HTML Audio Styling */
+  .audio-container {
+    margin: 15px 0;
+    text-align: center;
+  }
+
+  audio {
+    width: 100%;
+    height: 45px;
+    border-radius: 8px;
+    outline: none;
+  }
+
+  /* Grid Controls */
+  .btn-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  button {
+    background: var(--gold);
+    color: #0f2a24;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  button:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+
+  button.btn-secondary {
+    background: transparent;
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+  }
+
+  button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Verse List */
+  .verse-list {
+    max-height: 350px;
+    overflow-y: auto;
+    border-radius: 8px;
+    padding: 5px;
+    background: rgba(15, 42, 36, 0.5);
+    border: 1px solid var(--border-color);
+  }
+
+  .verse-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    font-family: 'Amiri', serif;
+    font-size: 1.25rem;
+    line-height: 2;
+    transition: background 0.2s;
+    text-align: right;
+  }
+
+  .verse-item:hover {
+    background: rgba(212, 175, 55, 0.1);
+  }
+
+  .verse-item.active {
+    background: var(--active-verse);
+    border-right: 4px solid var(--gold);
+    color: var(--gold);
+  }
+
+  .verse-badge {
+    font-size: 0.8rem;
+    color: var(--gold);
+    background: rgba(15, 42, 36, 0.8);
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-left: 8px;
+    font-family: 'Tajawal', sans-serif;
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>القرآن الكريم</h1>
+  <p class="subtitle">الشيخ محمد صديق المنشاوي (رواية حفص عن عاصم)</p>
+</header>
+
+<div class="container">
+
+  <!-- Surah Selector Card -->
+  <div class="card">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="ابحث باسم السورة أو رقمها...">
+    </div>
+    <select id="surahSelect"></select>
+  </div>
+
+  <!-- Active Verse Display Card -->
+  <div class="card">
+    <div class="main-display">
+      <div id="arabicText">جاري تحميل الآيات...</div>
+      <div id="verseNumber"></div>
+    </div>
+
+    <div id="statusText">جاري تهيئة القارئ...</div>
+
+    <!-- Audio Player -->
+    <div class="audio-container">
+      <audio id="audio" controls preload="metadata" crossOrigin="anonymous"></audio>
+    </div>
+
+    <button onclick="playSurah()">▶ تشغيل السورة كاملة</button>
+
+    <div class="btn-grid" style="margin-top: 10px;">
+      <button class="btn-secondary" onclick="previousVerse()">الآية السابقة</button>
+      <button class="btn-secondary" onclick="nextVerse()">الآية التالية</button>
+      <button class="btn-secondary" onclick="previousSurah()">السورة السابقة</button>
+      <button class="btn-secondary" onclick="nextSurah()">السورة التالية</button>
+    </div>
+  </div>
+
+  <!-- Surah Text & Verses Interactive List -->
+  <div class="card">
+    <h3 style="color: var(--gold); margin-bottom: 10px; font-size: 1.1rem;">نص السورة الكامل (اضغط للانتقال للآية)</h3>
+    <div class="verse-list" id="verseListContainer">
+      <!-- Verses will be loaded here dynamically -->
+    </div>
+  </div>
+
+</div>
+
+<script>
+const surahNames = [
+  "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
+  "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",
+  "الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم",
+  "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر",
+  "فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق",
+  "الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة",
+  "الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج",
+  "نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس",
+  "التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد",
+  "الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
+  "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر",
+  "المسد","الإخلاص","الفلق","الناس"
+];
+
+// Audio Servers (Primary and Backup)
+const AUDIO_SERVERS = [
+  "https://everyayah.com/data/Minshawy_Murattal_128kbps/",
+  "https://cdn.mp3quran.net/audio/muhammad-minshawi/r1/"
+];
+
+let currentServerIndex = 0;
+let currentSurah = 1;
+let currentVerse = 0;
+let verses = [];
+let totalVerses = 0;
+
+const audio = document.getElementById("audio");
+const surahSelect = document.getElementById("surahSelect");
+const searchInput = document.getElementById("searchInput");
+const arabicText = document.getElementById("arabicText");
+const verseNumber = document.getElementById("verseNumber");
+const statusText = document.getElementById("statusText");
+const verseListContainer = document.getElementById("verseListContainer");
+
+// Populate Surah Dropdown Options
+function populateSurahSelect(filter = "") {
+  surahSelect.innerHTML = "";
+  surahNames.forEach((name, index) => {
+    const num = index + 1;
+    if (!filter || name.includes(filter) || String(num).includes(filter)) {
+      const option = document.createElement("option");
+      option.value = num;
+      option.textContent = num + ". سورة " + name;
+      surahSelect.appendChild(option);
+    }
+  });
+  surahSelect.value = currentSurah;
+}
+
+populateSurahSelect();
+
+searchInput.addEventListener("input", (e) => {
+  populateSurahSelect(e.target.value.trim());
+});
+
+surahSelect.addEventListener("change", () => {
+  loadSurah(Number(surahSelect.value), false);
+});
+
+async function loadSurah(number, autoPlay = false) {
+  audio.pause();
+  currentSurah = number;
+  currentVerse = 0;
+  verses = [];
+  surahSelect.value = number;
+
+  arabicText.textContent = "جاري تحميل الآيات...";
+  verseNumber.textContent = "";
+  statusText.textContent = "جاري تحميل سورة " + surahNames[number - 1] + "...";
+  verseListContainer.innerHTML = "<div style='text-align:center; padding: 20px; color: var(--text-muted);'>جاري تحميل السورة...</div>";
+
+  try {
+    const url = `https://api.quran.com/api/v4/verses/by_chapter/${number}?language=ar&words=false&fields=text_uthmani&per_page=300`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("تعذر الاتصال بـ API القرآن الكريم");
+    
+    const data = await response.json();
+    verses = data.verses || [];
+    totalVerses = verses.length;
+
+    renderVerseList();
+    displayCurrentVerse();
+    setupAudioSource();
+
+    statusText.textContent = "تم تحميل سورة " + surahNames[number - 1];
+
+    if (autoPlay) playSurah();
+
+  } catch (err) {
+    arabicText.textContent = "تعذر تحميل الآيات. يرجى التحقق من الاتصال بالإنترنت.";
+    statusText.textContent = err.message;
+  }
+}
+
+function renderVerseList() {
+  verseListContainer.innerHTML = "";
+  verses.forEach((verse, idx) => {
+    const div = document.createElement("div");
+    div.className = "verse-item" + (idx === currentVerse ? " active" : "");
+    div.innerHTML = `<span class="verse-badge">${idx + 1}</span> ${verse.text_uthmani}`;
+    div.onclick = () => {
+      currentVerse = idx;
+      displayCurrentVerse();
+      playSurah();
+    };
+    verseListContainer.appendChild(div);
+  });
+}
+
+function displayCurrentVerse() {
+  if (!verses.length) return;
+
+  let text = verses[currentVerse].text_uthmani;
+  if (currentVerse === 0 && currentSurah !== 1 && currentSurah !== 9) {
+    text = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ \n" + text;
+  }
+
+  arabicText.textContent = text;
+  verseNumber.textContent = `سورة ${surahNames[currentSurah - 1]} - الآية ${currentVerse + 1} من ${totalVerses}`;
+
+  // Update Active Class in List
+  const items = verseListContainer.querySelectorAll(".verse-item");
+  items.forEach((item, idx) => {
+    if (idx === currentVerse) {
+      item.classList.add("active");
+      item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } else {
+      item.classList.remove("active");
+    }
+  });
+}
+
+function setupAudioSource() {
+  const surahStr = String(currentSurah).padStart(3, "0");
+  if (currentServerIndex === 0) {
+    // EveryAyah Ayah-by-Ayah Audio Format
+    const verseStr = String(currentVerse + 1).padStart(3, "0");
+    audio.src = `${AUDIO_SERVERS[0]}${surahStr}${verseStr}.mp3`;
+  } else {
+    // Full Surah Audio Format
+    audio.src = `${AUDIO_SERVERS[1]}${surahStr}.mp3`;
+  }
+}
+
+function playSurah() {
+  setupAudioSource();
+  audio.play().then(() => {
+    statusText.textContent = `يتم الآن تشغيل سورة ${surahNames[currentSurah - 1]}`;
+  }).catch((e) => {
+    statusText.textContent = "اضغط على زر التشغيل (▶) في مشغل الصوت للبدء";
+  });
+}
+
+audio.addEventListener("ended", () => {
+  if (currentVerse < totalVerses - 1) {
+    currentVerse++;
+    displayCurrentVerse();
+    playSurah();
+  } else if (currentSurah < 114) {
+    loadSurah(currentSurah + 1, true);
+  }
+});
+
+audio.addEventListener("error", () => {
+  if (currentServerIndex < AUDIO_SERVERS.length - 1) {
+    currentServerIndex++;
+    setupAudioSource();
+    audio.play();
+  } else {
+    statusText.textContent = "تعذر تحميل الصوت من السيرفرات. يرجى التحقق من اتصالك.";
+  }
+});
+
+function previousVerse() {
+  if (currentVerse > 0) {
+    currentVerse--;
+    displayCurrentVerse();
+    playSurah();
+  }
+}
+
+function nextVerse() {
+  if (currentVerse < totalVerses - 1) {
+    currentVerse++;
+    displayCurrentVerse();
+    playSurah();
+  }
+}
+
+function previousSurah() {
+  if (currentSurah > 1) loadSurah(currentSurah - 1, false);
+}
+
+function nextSurah() {
+  if (currentSurah < 114) loadSurah(currentSurah + 1, false);
+}
+
+// Initial Load
+loadSurah(1, false);
+</script>
+
+</body>
+</html>
