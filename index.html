@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>القرآن الكريم - الشيخ محمد صديق المنشاوي</title>
 
-<!-- Web App Manifest for PWA Support -->
-<link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIuinqtmN2KfZgSDYp9mE2YPYstmK2YUgLSDYp9mE2YXYtNmK2KfYiSIsCiAgInNob3J0X25hbWUiOiAi2KfZhNmC2LHYo9mGIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwZjJhMjQiLAogICJ0aGVtZV9jb2xvciI6ICIjMGYyYTI0Igp9">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
 <meta name="theme-color" content="#0f2a24">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -147,7 +148,6 @@
     min-height: 20px;
   }
 
-  /* HTML Audio Styling */
   .audio-container {
     margin: 15px 0;
     text-align: center;
@@ -160,7 +160,6 @@
     outline: none;
   }
 
-  /* Grid Controls */
   .btn-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -201,7 +200,6 @@
     cursor: not-allowed;
   }
 
-  /* Verse List */
   .verse-list {
     max-height: 350px;
     overflow-y: auto;
@@ -254,7 +252,6 @@
 
 <div class="container">
 
-  <!-- Surah Selector Card -->
   <div class="card">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="ابحث باسم السورة أو رقمها...">
@@ -262,7 +259,6 @@
     <select id="surahSelect"></select>
   </div>
 
-  <!-- Active Verse Display Card -->
   <div class="card">
     <div class="main-display">
       <div id="arabicText">جاري تحميل الآيات...</div>
@@ -271,7 +267,6 @@
 
     <div id="statusText">جاري تهيئة القارئ...</div>
 
-    <!-- Audio Player -->
     <div class="audio-container">
       <audio id="audio" controls preload="metadata" crossOrigin="anonymous"></audio>
     </div>
@@ -286,12 +281,9 @@
     </div>
   </div>
 
-  <!-- Surah Text & Verses Interactive List -->
   <div class="card">
     <h3 style="color: var(--gold); margin-bottom: 10px; font-size: 1.1rem;">نص السورة الكامل (اضغط للانتقال للآية)</h3>
-    <div class="verse-list" id="verseListContainer">
-      <!-- Verses will be loaded here dynamically -->
-    </div>
+    <div class="verse-list" id="verseListContainer"></div>
   </div>
 
 </div>
@@ -312,7 +304,6 @@ const surahNames = [
   "المسد","الإخلاص","الفلق","الناس"
 ];
 
-// Audio Servers (Primary and Backup)
 const AUDIO_SERVERS = [
   "https://everyayah.com/data/Minshawy_Murattal_128kbps/",
   "https://cdn.mp3quran.net/audio/muhammad-minshawi/r1/"
@@ -332,7 +323,6 @@ const verseNumber = document.getElementById("verseNumber");
 const statusText = document.getElementById("statusText");
 const verseListContainer = document.getElementById("verseListContainer");
 
-// Populate Surah Dropdown Options
 function populateSurahSelect(filter = "") {
   surahSelect.innerHTML = "";
   surahNames.forEach((name, index) => {
@@ -373,7 +363,7 @@ async function loadSurah(number, autoPlay = false) {
     const url = `https://api.quran.com/api/v4/verses/by_chapter/${number}?language=ar&words=false&fields=text_uthmani&per_page=300`;
     const response = await fetch(url);
     if (!response.ok) throw new Error("تعذر الاتصال بـ API القرآن الكريم");
-    
+
     const data = await response.json();
     verses = data.verses || [];
     totalVerses = verses.length;
@@ -418,7 +408,6 @@ function displayCurrentVerse() {
   arabicText.textContent = text;
   verseNumber.textContent = `سورة ${surahNames[currentSurah - 1]} - الآية ${currentVerse + 1} من ${totalVerses}`;
 
-  // Update Active Class in List
   const items = verseListContainer.querySelectorAll(".verse-item");
   items.forEach((item, idx) => {
     if (idx === currentVerse) {
@@ -433,11 +422,9 @@ function displayCurrentVerse() {
 function setupAudioSource() {
   const surahStr = String(currentSurah).padStart(3, "0");
   if (currentServerIndex === 0) {
-    // EveryAyah Ayah-by-Ayah Audio Format
     const verseStr = String(currentVerse + 1).padStart(3, "0");
     audio.src = `${AUDIO_SERVERS[0]}${surahStr}${verseStr}.mp3`;
   } else {
-    // Full Surah Audio Format
     audio.src = `${AUDIO_SERVERS[1]}${surahStr}.mp3`;
   }
 }
@@ -446,7 +433,7 @@ function playSurah() {
   setupAudioSource();
   audio.play().then(() => {
     statusText.textContent = `يتم الآن تشغيل سورة ${surahNames[currentSurah - 1]}`;
-  }).catch((e) => {
+  }).catch(() => {
     statusText.textContent = "اضغط على زر التشغيل (▶) في مشغل الصوت للبدء";
   });
 }
@@ -495,8 +482,16 @@ function nextSurah() {
   if (currentSurah < 114) loadSurah(currentSurah + 1, false);
 }
 
-// Initial Load
 loadSurah(1, false);
+
+// Register the service worker for app installation and offline app-shell caching.
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(() => console.log("Quran Player service worker registered."))
+      .catch((error) => console.log("Service worker registration failed:", error));
+  });
+}
 </script>
 
 </body>
